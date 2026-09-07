@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🎂 宋文杰 · 20岁生日快乐</title>
+    <style>
+        /* ===== 全局重置 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #0b0b1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', 'PingFang SC', 'Helvetica Neue', sans-serif;
+            touch-action: manipulation;
+            position: relative;
+        }
+
+        /* ===== 背景轮播层 ===== */
+        #bg-slider {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            will-change: opacity;
+        }
+        .bg-slide.active {
+            opacity: 1;
+        }
+
+        /* ===== 背景星星 ===== */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--dur, 3s) ease-in-out infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* ===== Canvas 粒子 ===== */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ===== 主内容 ===== */
+        .content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        .title {
+            color: #ffe6a7;
+            font-size: clamp(2rem, 8vw, 3.2rem);
+            font-weight: 900;
+            text-shadow: 0 0 20px #ff9a9e, 0 0 60px #fecfef, 0 0 100px #a18cd1;
+            z-index: 10;
+            animation: flicker 2.4s infinite alternate;
+            letter-spacing: 6px;
+            text-align: center;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.75; text-shadow: 0 0 15px #ff9a9e, 0 0 40px #fecfef; }
+            100% { opacity: 1; text-shadow: 0 0 30px #ff9a9e, 0 0 70px #fecfef, 0 0 120px #a18cd1; }
+        }
+
+        .sub-title {
+            color: rgba(255,255,255,0.9);
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+            letter-spacing: 4px;
+            z-index: 10;
+            margin-bottom: 12px;
+            background: rgba(255,255,255,0.08);
+            padding: 6px 28px;
+            border-radius: 40px;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.15);
+            text-align: center;
+            font-weight: 300;
+        }
+        .sub-title .highlight { font-weight: 700; color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.4); }
+        .sub-title .age { color: #ff9ff3; font-weight: 600; }
+        .sub-title .hobby { color: #54a0ff; font-weight: 600; }
+
+        .blessing-carousel {
+            color: rgba(255,255,255,0.75);
+            font-size: clamp(0.85rem, 2.8vw, 1.2rem);
+            z-index: 10;
+            margin-bottom: 12px;
+            height: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.25);
+            padding: 0 24px;
+            border-radius: 30px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.06);
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 1px;
+            max-width: 85%;
+        }
+        .blessing-carousel span {
+            display: inline-block;
+            animation: fadeSlide 0.6s ease;
+        }
+        @keyframes fadeSlide {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .cake-wrapper {
+            width: min(280px, 70vw);
+            height: min(280px, 70vw);
+            perspective: 900px;
+            z-index: 10;
+            touch-action: pan-y;
+            margin: 4px 0;
+            position: relative;
+        }
+        .cake {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .layer {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 3px solid rgba(0,0,0,0.08);
+            box-shadow: inset 0 -8px 20px rgba(0,0,0,0.15);
+        }
+        .plate {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateY(72px);
+            width: 240px;
+            height: 16px;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at 50% 40%, #e8e0d8, #b8a89a);
+            border: 2px solid #a09080;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+            z-index: 0;
+        }
+        .layer-1 {
+            width: 210px;
+            height: 68px;
+            transform: translate(-50%, -50%) translateY(38px);
+            background: linear-gradient(180deg, #f8b88b, #e8936a);
+            border-color: #c97a56;
+        }
+        .layer-1::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 10%;
+            width: 80%;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            filter: blur(2px);
+        }
+        .layer-2 {
+            width: 178px;
+            height: 58px;
+            transform: translate(-50%, -50%) translateY(-4px);
+            background: linear-gradient(180deg, #fccfaf, #f5b88a);
+            border-color: #d99a72;
+        }
+        .layer-2::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 12%;
+            width: 76%;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            filter: blur(2px);
+        }
+        .layer-3 {
+            width: 146px;
+            height: 48px;
+            transform: translate(-50%, -50%) translateY(-44px);
+            background: linear-gradient(180deg, #fde2d4, #f5c8b8);
+            border-color: #dbb09e;
+        }
+        .layer-3::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 14%;
+            width: 72%;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            filter: blur(2px);
+        }
+
+        .cream-piping {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .cream-piping .dot {
+            position: absolute;
+            width: 22px;
+            height: 14px;
+            background: #fff9f0;
+            border-radius: 50% 50% 50% 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .cream-piping .dot:nth-child(1) { top: 28%; left: 8%; transform: rotate(-20deg); }
+        .cream-piping .dot:nth-child(2) { top: 28%; right: 8%; transform: rotate(20deg) scaleX(-1); }
+        .cream-piping .dot:nth-child(3) { top: 10%; left: 28%; transform: rotate(-10deg) scale(0.9); }
+        .cream-piping .dot:nth-child(4) { top: 10%; right: 28%; transform: rotate(10deg) scaleX(-1) scale(0.9); }
+        .cream-piping .dot:nth-child(5) { top: -4%; left: 48%; transform: rotate(0deg) scale(0.8); }
+
+        .sprinkles {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateY(-30px);
+            width: 120px;
+            height: 30px;
+            pointer-events: none;
+        }
+        .sprinkles span {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+        }
+        .sprinkles span:nth-child(1) { left: 5%; top: 10%; background: #ff6b6b; }
+        .sprinkles span:nth-child(2) { left: 20%; top: 60%; background: #feca57; }
+        .sprinkles span:nth-child(3) { left: 35%; top: 5%; background: #48dbfb; }
+        .sprinkles span:nth-child(4) { left: 50%; top: 70%; background: #ff9ff3; }
+        .sprinkles span:nth-child(5) { left: 65%; top: 15%; background: #54a0ff; }
+        .sprinkles span:nth-child(6) { left: 80%; top: 55%; background: #ff9f43; }
+        .sprinkles span:nth-child(7) { left: 92%; top: 10%; background: #00d2d3; }
+
+        .candle-group {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        .candle {
+            position: absolute;
+            width: 10px;
+            height: 34px;
+            border-radius: 3px 3px 0 0;
+            background: linear-gradient(180deg, #ff6b6b, #ee5a24);
+            box-shadow: 0 0 20px rgba(255,107,107,0.3);
+            transform-origin: bottom center;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+        .candle:nth-child(1) { left: -14px; top: -62px; height: 36px; background: linear-gradient(180deg, #ff6b6b, #e84118); }
+        .candle:nth-child(2) { left: 4px; top: -68px; height: 42px; background: linear-gradient(180deg, #feca57, #f0932b); box-shadow: 0 0 20px rgba(254,202,87,0.3); }
+        .candle:nth-child(3) { left: 22px; top: -62px; height: 36px; background: linear-gradient(180deg, #a29bfe, #6c5ce7); box-shadow: 0 0 20px rgba(162,155,254,0.3); }
+        .candle::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 2px;
+            right: 2px;
+            height: 3px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+
+        .flame-group {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        .flame {
+            position: absolute;
+            width: 16px;
+            height: 24px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: burn 0.4s infinite alternate ease-in-out;
+            transform-origin: bottom center;
+            pointer-events: none;
+            filter: blur(1px);
+        }
+        .flame::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 25%;
+            width: 40%;
+            height: 30%;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            filter: blur(3px);
+        }
+        .flame:nth-child(1) { left: -14px; top: -78px; background: radial-gradient(circle at 50% 100%, #f9d423, #f7971e); box-shadow: 0 0 50px #f7971e; animation-delay: 0s; }
+        .flame:nth-child(2) { left: 4px; top: -84px; background: radial-gradient(circle at 50% 100%, #fff5a0, #f9d423); box-shadow: 0 0 60px #f9d423; animation-delay: 0.15s; width: 20px; height: 30px; }
+        .flame:nth-child(3) { left: 22px; top: -78px; background: radial-gradient(circle at 50% 100%, #a29bfe, #6c5ce7); box-shadow: 0 0 50px #a29bfe; animation-delay: 0.3s; }
+        @keyframes burn {
+            0% { transform: scale(1) rotate(-4deg) translateY(0); }
+            100% { transform: scale(1.12) rotate(4deg) translateY(-4px); }
+        }
+
+        .btn-boom {
+            margin-top: 14px;
+            padding: 12px 40px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: clamp(1rem, 3.2vw, 1.3rem);
+            font-weight: 700;
+            letter-spacing: 4px;
+            box-shadow: 0 8px 40px rgba(255,75,43,0.5);
+            z-index: 10;
+            transition: all 0.15s;
+            touch-action: manipulation;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.25);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-boom::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 70%);
+            pointer-events: none;
+        }
+        .btn-boom:active {
+            transform: scale(0.92);
+            box-shadow: 0 4px 20px rgba(255,75,43,0.8);
+        }
+
+        .hint {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.7rem;
+            margin-top: 12px;
+            z-index: 10;
+            letter-spacing: 2px;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 18px;
+            border-radius: 20px;
+            font-weight: 300;
+        }
+
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(10,8,30,0.92);
+            backdrop-filter: blur(16px);
+            color: #fff;
+            padding: 36px 32px 28px;
+            border-radius: 32px;
+            border: 2px solid rgba(255,215,0,0.4);
+            box-shadow: 0 0 120px rgba(255,215,0,0.15);
+            z-index: 100;
+            text-align: center;
+            transition: transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.4s;
+            max-width: 88%;
+            width: 380px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .toast.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .toast .emoji-big {
+            font-size: 3.6rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .toast .msg {
+            font-size: clamp(1.4rem, 5vw, 2rem);
+            font-weight: 700;
+            line-height: 1.5;
+            background: linear-gradient(135deg, #ffd700, #ff6b6b, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .toast .sub-msg {
+            font-size: clamp(0.85rem, 2.8vw, 1.1rem);
+            color: rgba(255,255,255,0.7);
+            margin-top: 8px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            -webkit-text-fill-color: rgba(255,255,255,0.7);
+        }
+        .toast .close-btn {
+            margin-top: 18px;
+            padding: 10px 36px;
+            background: linear-gradient(135deg, #ffd700, #f9a825);
+            border: none;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            cursor: pointer;
+            transition: transform 0.15s;
+            box-shadow: 0 4px 24px rgba(255,215,0,0.3);
+        }
+        .toast .close-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* ===== 音频控制按钮（喇叭） ===== */
+        .audio-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 50;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.6);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            touch-action: manipulation;
+        }
+        .audio-toggle:active {
+            transform: scale(0.9);
+            background: rgba(255,255,255,0.15);
+        }
+        .audio-toggle .icon { line-height: 1; }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 400px) {
+            .cake-wrapper { width: min(220px, 68vw); height: min(220px, 68vw); }
+            .layer-1 { width: 170px; height: 54px; transform: translate(-50%, -50%) translateY(32px); }
+            .layer-2 { width: 144px; height: 46px; transform: translate(-50%, -50%) translateY(-2px); }
+            .layer-3 { width: 118px; height: 38px; transform: translate(-50%, -50%) translateY(-34px); }
+            .plate { width: 190px; height: 12px; transform: translate(-50%, -50%) translateY(58px); }
+            .candle:nth-child(1) { left: -10px; top: -50px; height: 28px; width: 8px; }
+            .candle:nth-child(2) { left: 4px; top: -56px; height: 34px; width: 8px; }
+            .candle:nth-child(3) { left: 18px; top: -50px; height: 28px; width: 8px; }
+            .flame:nth-child(1) { left: -10px; top: -64px; width: 12px; height: 18px; }
+            .flame:nth-child(2) { left: 4px; top: -70px; width: 16px; height: 24px; }
+            .flame:nth-child(3) { left: 18px; top: -64px; width: 12px; height: 18px; }
+            .sprinkles { width: 90px; transform: translate(-50%, -50%) translateY(-22px); }
+            .sprinkles span { width: 6px; height: 6px; }
+            .cream-piping .dot { width: 16px; height: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 背景轮播容器 ===== -->
+    <div id="bg-slider"></div>
+
+    <!-- ===== 星星 ===== -->
+    <div class="stars" id="stars"></div>
+
+    <!-- ===== 粒子 Canvas ===== -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ===== 祝福弹窗 ===== -->
+    <div class="toast" id="toast">
+        <span class="emoji-big">🎉</span>
+        <div class="msg">生日快乐！</div>
+        <div class="sub-msg" id="toastSubMsg">恭喜道友筑基成功，寿元绵长 🧘</div>
+        <button class="close-btn" id="closeToastBtn">❤️ 收下祝福</button>
+    </div>
+
+    <!-- ===== 主内容 ===== -->
+    <div class="content">
+        <div class="title">🎂 HAPPY BIRTHDAY</div>
+        <div class="sub-title" id="subTitle"></div>
+        <div class="blessing-carousel" id="blessingCarousel">
+            <span>✨ 愿道友大道可期，道心永固 ✨</span>
+        </div>
+        <div class="cake-wrapper" id="cakeWrapper">
+            <div class="cake" id="cake">
+                <div class="plate"></div>
+                <div class="layer layer-1"></div>
+                <div class="layer layer-2"></div>
+                <div class="layer layer-3"></div>
+                <div class="cream-piping">
+                    <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                </div>
+                <div class="sprinkles">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="candle-group">
+                    <div class="candle" data-index="0"></div>
+                    <div class="candle" data-index="1"></div>
+                    <div class="candle" data-index="2"></div>
+                </div>
+                <div class="flame-group">
+                    <div class="flame"></div><div class="flame"></div><div class="flame"></div>
+                </div>
+            </div>
+        </div>
+        <button class="btn-boom" id="boomBtn">🎈 戳我许愿</button>
+        <div class="hint">👆 滑动蛋糕 · 点击许愿</div>
+    </div>
+
+    <!-- ===== 音频控制按钮 ===== -->
+    <div class="audio-toggle" id="audioToggle" title="播放/暂停《不凡》">
+        <span class="icon">🔇</span>
+    </div>
+
+    <script>
+        // ================================================================
+        //  ★ 配置区 —— 修改图片和音乐文件 ★
+        // ================================================================
+
+        // 1. 背景图片列表（请把图片文件放在同一目录，填写文件名即可）
+        const BG_IMAGES = [
+            'bg1.jpg',   // 替换成你的图片文件名
+            'bg2.jpg',
+            'bg3.jpg',
+            // 想加多少张就加多少，用逗号隔开
+        ];
+
+        // 2. 音乐文件（《不凡》MP3，放在同一目录）
+        const MUSIC_FILE = 'bufan.mp3';
+
+        // ================================================================
+        //  以下代码会自动使用上面的配置，无需改动
+        // ================================================================
+
+        // ---- 背景轮播 ----
+        (function initBgSlider() {
+            if (BG_IMAGES.length === 0) return;
+            const container = document.getElementById('bg-slider');
+            const slides = [];
+            BG_IMAGES.forEach((url, index) => {
+                const div = document.createElement('div');
+                div.className = 'bg-slide' + (index === 0 ? ' active' : '');
+                div.style.backgroundImage = `url('${url}')`;
+                container.appendChild(div);
+                slides.push(div);
+            });
+            let current = 0;
+            setInterval(() => {
+                slides[current].classList.remove('active');
+                current = (current + 1) % slides.length;
+                slides[current].classList.add('active');
+            }, 5000); // 每5秒切换
+        })();
+
+        // ---- 副标题、祝福语等配置 ----
+        const CONFIG = {
+            friendName: '宋文杰',
+            age: 20,
+            hobby: '到了20岁了就要拿出真本事',
+            blessings: [
+                '✨ 愿道友大道可期，道心永固 ✨',
+                '🌟 祝修仙之路顺遂，金丹早日结成 🌟',
+                '🎈 愿灵根充盈，法力无边 🎈',
+                '🌈 愿渡劫成功，飞升可期 🌈',
+                '💫 愿法宝相伴，机缘不断 💫',
+                '🌺 愿大道至简，心若明镜 🌺',
+            ],
+            toastMessages: [
+                '恭喜道友筑基成功，寿元绵长 🧘',
+                '愿道友道心坚定，直指大道 ⚔️',
+                '愿灵光常伴，境界突破 🌟',
+                '道友，且听风吟，且行且修 🍃',
+            ],
+        };
+
+        document.getElementById('subTitle').innerHTML = `
+            FOR <span class="highlight">${CONFIG.friendName}</span>
+            · <span class="age">${CONFIG.age}岁</span>
+            · <span class="hobby">${CONFIG.hobby}</span>
+        `;
+
+        // ---- 星星 ----
+        (function createStars() {
+            const container = document.getElementById('stars');
+            for (let i = 0; i < 120; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = 1.5 + Math.random() * 3;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+                star.style.animationDelay = (Math.random() * 5) + 's';
+                star.style.opacity = 0.3 + Math.random() * 0.7;
+                container.appendChild(star);
+            }
+        })();
+
+        // ---- Canvas 粒子 ----
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const COLORS = ['#ff6b6b','#feca57','#48dbfb','#ff9ff3','#54a0ff','#5f27cd','#ff9f43','#00d2d3','#ff4757','#2ed573'];
+
+        class Particle {
+            constructor() { this.reset(); this.x = Math.random()*width; this.y = Math.random()*height; }
+            reset() {
+                this.x = Math.random()*width;
+                this.y = -20 - Math.random()*120;
+                this.size = 7 + Math.random()*20;
+                this.speedY = 0.3 + Math.random()*1.0;
+                this.speedX = (Math.random()-0.5)*0.4;
+                this.color = COLORS[Math.floor(Math.random()*COLORS.length)];
+                this.shape = Math.random()>0.45 ? 'balloon' : 'star';
+                this.phase = Math.random()*Math.PI*2;
+                this.rotation = 0;
+                this.rotSpeed = (Math.random()-0.5)*0.025;
+                this.shadowBlur = 12 + Math.random()*10;
+                this.exploding = false;
+                this.explodeVx = 0;
+                this.explodeVy = 0;
+                this.gravity = 0.04;
+                this.damping = 0.995;
+            }
+            update() {
+                if (this.exploding) {
+                    this.x += this.explodeVx;
+                    this.y += this.explodeVy;
+                    this.explodeVy += this.gravity;
+                    this.explodeVx *= this.damping;
+                    this.rotation += 0.08;
+                    this.size *= 0.997;
+                    if (this.size < 0.8 || this.y > height+50) {
+                        this.exploding = false;
+                        this.reset();
+                        this.y = Math.random()*height*0.3;
+                    }
+                    return;
+                }
+                this.y += this.speedY;
+                this.x += this.speedX + Math.sin(this.phase)*0.25;
+                this.phase += 0.018;
+                this.rotation += this.rotSpeed;
+                if (this.x > width+30) this.x = -30;
+                if (this.x < -30) this.x = width+30;
+                if (this.y > height+50) this.reset();
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.shadowColor = this.color;
+                ctx.shadowBlur = this.shadowBlur * (this.exploding ? 1.5 : 1);
+                const s = this.size;
+                if (this.shape === 'balloon') {
+                    const w = s*0.6, h = s*0.7;
+                    ctx.beginPath();
+                    ctx.ellipse(0,0,w,h,0,0,Math.PI*2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                    ctx.beginPath();
+                    ctx.ellipse(-w*0.25, -h*0.25, w*0.2, h*0.2, -0.5, 0, Math.PI*2);
+                    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.moveTo(0,h);
+                    ctx.quadraticCurveTo(-3,h+6,0,h+10);
+                    ctx.quadraticCurveTo(3,h+6,0,h);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                } else {
+                    ctx.shadowBlur = this.shadowBlur * 1.4;
+                    ctx.fillStyle = this.color;
+                    const r = s/2.2;
+                    ctx.beginPath();
+                    for (let i=0; i<5; i++) {
+                        const angle = (i*4*Math.PI/5) - Math.PI/2;
+                        const px = Math.cos(angle)*r;
+                        const py = Math.sin(angle)*r;
+                        i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                    ctx.beginPath();
+                    ctx.arc(-r*0.2, -r*0.2, r*0.15, 0, Math.PI*2);
+                    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+            explode(cx, cy, power) {
+                const angle = Math.atan2(this.y-cy, this.x-cx) + (Math.random()-0.5)*0.6;
+                const speed = 1.5 + Math.random()*power*0.8;
+                this.exploding = true;
+                this.explodeVx = Math.cos(angle)*speed;
+                this.explodeVy = Math.sin(angle)*speed - 0.5;
+                this.size = this.size*(0.6+Math.random()*0.8);
+                this.color = COLORS[Math.floor(Math.random()*COLORS.length)];
+                this.shape = Math.random()>0.3 ? 'star' : 'balloon';
+                this.shadowBlur = 25 + Math.random()*20;
+            }
+        }
+
+        const particles = [];
+        for (let i=0; i<160; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0,0,width,height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ---- 蛋糕 3D 拖拽 ----
+        const cake = document.getElementById('cake');
+        const wrapper = document.getElementById('cakeWrapper');
+        let isDragging = false;
+        let startX, startY, rotateX=10, rotateY=0;
+        cake.style.animation = 'none';
+        cake.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+        function handleStart(cx, cy) { isDragging=true; startX=cx; startY=cy; cake.style.transition='none'; }
+        function handleMove(cx, cy) {
+            if (!isDragging) return;
+            const dx = cx - startX, dy = cy - startY;
+            rotateY += dx*0.8;
+            rotateX += dy*0.5;
+            if (rotateX>35) rotateX=35;
+            if (rotateX<-35) rotateX=-35;
+            cake.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            startX = cx; startY = cy;
+        }
+        function handleEnd() { if(isDragging){ isDragging=false; cake.style.transition='transform 0.25s ease-out'; } }
+
+        wrapper.addEventListener('touchstart', e=>{ const t=e.touches[0]; handleStart(t.clientX,t.clientY); }, {passive:true});
+        wrapper.addEventListener('touchmove', e=>{ if(!isDragging)return; e.preventDefault(); const t=e.touches[0]; handleMove(t.clientX,t.clientY); }, {passive:false});
+        wrapper.addEventListener('touchend', handleEnd, {passive:true});
+        wrapper.addEventListener('mousedown', e=>handleStart(e.clientX,e.clientY));
+        window.addEventListener('mousemove', e=>handleMove(e.clientX,e.clientY));
+        window.addEventListener('mouseup', handleEnd);
+
+        // ---- 祝福语轮播 ----
+        const carouselEl = document.getElementById('blessingCarousel');
+        let blessingIndex = 0;
+        function nextBlessing() {
+            blessingIndex = (blessingIndex+1) % CONFIG.blessings.length;
+            carouselEl.innerHTML = `<span>${CONFIG.blessings[blessingIndex]}</span>`;
+        }
+        setInterval(nextBlessing, 4000);
+
+        // ---- 烟花 + 弹窗 ----
+        const boomBtn = document.getElementById('boomBtn');
+        const toast = document.getElementById('toast');
+        const toastSubMsg = document.getElementById('toastSubMsg');
+        const closeToastBtn = document.getElementById('closeToastBtn');
+
+        function triggerExplosion() {
+            const cx = width/2, cy = height/2, power = 6 + Math.random()*4;
+            particles.forEach(p => { if(Math.random()<0.75) p.explode(cx+(Math.random()-0.5)*120, cy+(Math.random()-0.5)*120, power); });
+            for (let i=0; i<30; i++) {
+                const p = new Particle();
+                p.x = cx+(Math.random()-0.5)*80;
+                p.y = cy+(Math.random()-0.5)*80;
+                p.explode(cx,cy,power*0.8);
+                p.size = 4+Math.random()*14;
+                p.color = COLORS[Math.floor(Math.random()*COLORS.length)];
+                p.shape = Math.random()>0.3 ? 'star' : 'balloon';
+                p.shadowBlur = 30;
+                particles.push(p);
+            }
+            const msgs = CONFIG.toastMessages;
+            toastSubMsg.textContent = msgs[Math.floor(Math.random()*msgs.length)];
+            toast.classList.add('show');
+            if (navigator.vibrate) navigator.vibrate(40);
+        }
+
+        boomBtn.addEventListener('click', triggerExplosion);
+        document.querySelectorAll('.candle').forEach((candle, idx) => {
+            candle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const cx = width/2 + (idx-1)*20, cy = height/2 - 60;
+                particles.forEach(p => { if(Math.random()<0.3) p.explode(cx+(Math.random()-0.5)*60, cy+(Math.random()-0.5)*60, 3); });
+                if (navigator.vibrate) navigator.vibrate(20);
+                const msgs = CONFIG.toastMessages;
+                toastSubMsg.textContent = msgs[Math.floor(Math.random()*msgs.length)];
+                toast.classList.add('show');
+            });
+        });
+
+        function closeToastFn() { toast.classList.remove('show'); if(navigator.vibrate) navigator.vibrate(10); }
+        closeToastBtn.addEventListener('click', closeToastFn);
+        toast.addEventListener('click', function(e){ if(e.target===this) closeToastFn(); });
+        setTimeout(()=>{ toast.classList.add('show'); }, 1800);
+
+        // ================================================================
+        //  ★ 背景音乐 —— 播放《不凡》MP3 ★
+        // ================================================================
+        const audio = new Audio(MUSIC_FILE);
+        audio.loop = true;  // 循环播放
+        audio.volume = 0.8;
+
+        let isMusicPlaying = false;
+        const toggleBtn = document.getElementById('audioToggle');
+        const icon = toggleBtn.querySelector('.icon');
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                audio.pause();
+                isMusicPlaying = false;
+                icon.textContent = '🔇';
+            } else {
+                // 用户手势触发播放
+                audio.play().then(() => {
+                    isMusicPlaying = true;
+                    icon.textContent = '🔊';
+                }).catch((err) => {
+                    // 如果播放失败（比如文件不存在），提示用户
+                    alert('播放失败，请确保 ' + MUSIC_FILE + ' 文件已上传到同目录。');
+                    console.warn('音频播放错误:', err);
+                });
+            }
+        }
+
+        toggleBtn.addEventListener('click', toggleMusic);
+
+        // 用户首次点击页面任意位置时自动播放（一次）
+        function autoStartMusic() {
+            if (!isMusicPlaying) {
+                audio.play().then(() => {
+                    isMusicPlaying = true;
+                    icon.textContent = '🔊';
+                }).catch(() => {});
+            }
+            document.removeEventListener('click', autoStartMusic);
+            document.removeEventListener('touchstart', autoStartMusic);
+        }
+        document.addEventListener('click', autoStartMusic);
+        document.addEventListener('touchstart', autoStartMusic);
+
+        console.log(`🎂 祝 ${CONFIG.friendName} ${CONFIG.age}岁生日快乐！`);
+        console.log(`💪 到了20岁了就要拿出真本事！`);
+        console.log(`🎵 正在尝试播放《不凡》... 如果听不到，请检查 ${MUSIC_FILE} 是否存在。`);
+    </script>
+</body>
+</html>
