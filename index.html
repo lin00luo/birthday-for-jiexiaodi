@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎂 宋文杰 · 20岁生日快乐</title>
     <style>
-        /* ===== 全局重置 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -22,7 +21,7 @@
             touch-action: manipulation;
         }
 
-        /* ===== 封面页（纯黑 + 中间蛋糕） ===== */
+        /* ===== 封面页 ===== */
         #cover {
             position: fixed;
             top: 0;
@@ -52,7 +51,7 @@
             transform: scale(0.92);
         }
 
-        /* ===== 背景轮播层 ===== */
+        /* ===== 背景轮播 ===== */
         #bg-slider {
             position: fixed;
             top: 0;
@@ -79,7 +78,7 @@
             opacity: 1;
         }
 
-        /* ===== 背景星星 ===== */
+        /* ===== 星星 ===== */
         .stars {
             position: fixed;
             top: 0;
@@ -190,12 +189,12 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== 蛋糕容器（显示 Minecraft 蛋糕图片） ===== */
+        /* ===== 蛋糕容器（下移） ===== */
         .cake-wrapper {
             width: min(280px, 70vw);
             height: min(280px, 70vw);
             z-index: 10;
-            margin: 4px 0;
+            margin: 20px 0 10px 0;  /* 增加上边距使蛋糕下移 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -208,39 +207,40 @@
             image-rendering: pixelated;
         }
 
-        /* ===== 按钮 ===== */
-        .btn-boom {
-            margin-top: 14px;
-            padding: 12px 40px;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+        /* ===== 按钮组（许愿 + 视频） ===== */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 6px;
+            z-index: 10;
+        }
+        .btn-boom, .btn-video {
+            padding: 12px 28px;
             border: none;
             border-radius: 50px;
             color: #fff;
-            font-size: clamp(1rem, 3.2vw, 1.3rem);
+            font-size: clamp(0.9rem, 2.8vw, 1.1rem);
             font-weight: 700;
-            letter-spacing: 4px;
-            box-shadow: 0 8px 40px rgba(255,75,43,0.5);
+            letter-spacing: 2px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
             z-index: 10;
             transition: all 0.15s;
             touch-action: manipulation;
             cursor: pointer;
-            border: 2px solid rgba(255,255,255,0.25);
+            border: 2px solid rgba(255,255,255,0.15);
             position: relative;
             overflow: hidden;
         }
-        .btn-boom::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 70%);
-            pointer-events: none;
+        .btn-boom {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
         }
-        .btn-boom:active {
+        .btn-video {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+        }
+        .btn-boom:active, .btn-video:active {
             transform: scale(0.92);
-            box-shadow: 0 4px 20px rgba(255,75,43,0.8);
         }
 
         .hint {
@@ -255,6 +255,7 @@
             font-weight: 300;
         }
 
+        /* ===== 弹窗（祝福 + 视频） ===== */
         .toast {
             position: fixed;
             top: 50%;
@@ -319,7 +320,85 @@
             transform: scale(0.92);
         }
 
-        /* ===== 音频控制按钮 ===== */
+        /* ===== 视频模态框 ===== */
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .video-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .video-modal .video-container {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(255,215,0,0.2);
+        }
+        .video-modal video {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #000;
+        }
+        .video-modal .video-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.8);
+        }
+        .video-modal .video-controls button {
+            padding: 6px 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .video-modal .video-controls button:active {
+            background: rgba(255,255,255,0.2);
+        }
+        .video-modal .close-video {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            color: #fff;
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .video-modal .close-video:active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* ===== 音频控制 ===== */
         .audio-toggle {
             position: fixed;
             bottom: 20px;
@@ -351,18 +430,26 @@
             .cake-wrapper {
                 width: min(220px, 68vw);
                 height: min(220px, 68vw);
+                margin-top: 30px;
+            }
+            .btn-group {
+                gap: 8px;
+            }
+            .btn-boom, .btn-video {
+                padding: 10px 20px;
+                font-size: 0.8rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== 封面页（纯黑 + Minecraft 蛋糕） ===== -->
+    <!-- ===== 封面页 ===== -->
     <div id="cover">
         <img src="minecraft_cake.png" alt="Minecraft Cake" id="coverCake">
     </div>
 
-    <!-- ===== 背景轮播容器 ===== -->
+    <!-- ===== 背景轮播 ===== -->
     <div id="bg-slider"></div>
 
     <!-- ===== 星星 ===== -->
@@ -379,6 +466,20 @@
         <button class="close-btn" id="closeToastBtn">❤️ 收下祝福</button>
     </div>
 
+    <!-- ===== 视频模态框 ===== -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-container">
+            <button class="close-video" id="closeVideoBtn">✕</button>
+            <video id="videoPlayer" controls playsinline>
+                <source src="" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+            <div class="video-controls" id="videoControls">
+                <!-- 视频切换按钮会由 JavaScript 动态生成 -->
+            </div>
+        </div>
+    </div>
+
     <!-- ===== 主内容 ===== -->
     <div class="content" id="mainContent">
         <div class="title">🎂 HAPPY BIRTHDAY</div>
@@ -386,41 +487,61 @@
         <div class="blessing-carousel" id="blessingCarousel">
             <span>✨ 愿道友大道可期，道心永固 ✨</span>
         </div>
-        <!-- 蛋糕容器（显示 Minecraft 蛋糕图片） -->
+        <!-- 蛋糕容器（Minecraft 蛋糕） -->
         <div class="cake-wrapper" id="cakeWrapper">
             <img src="minecraft_cake.png" alt="Minecraft Cake" id="mainCake">
         </div>
-        <button class="btn-boom" id="boomBtn">🎈 戳我许愿</button>
+        <!-- 按钮组 -->
+        <div class="btn-group">
+            <button class="btn-boom" id="boomBtn">🎈 戳我许愿</button>
+            <button class="btn-video" id="videoBtn">🎬 视频彩蛋</button>
+        </div>
         <div class="hint">👆 点击蛋糕进入 · 点击许愿</div>
     </div>
 
-    <!-- ===== 音频控制按钮 ===== -->
+    <!-- ===== 音频控制 ===== -->
     <div class="audio-toggle" id="audioToggle" title="播放/暂停《不凡》">
         <span class="icon">🔇</span>
     </div>
 
     <script>
         // ================================================================
-        //  ★ 配置区 —— 修改文件名 ★
+        //  ★ 配置区 —— 修改以下内容 ★
         // ================================================================
 
-        // 1. 背景图片列表（请把图片文件放在同一目录，按实际文件名修改）
+        // 1. 背景图片列表（按实际文件名修改）
         const BG_IMAGES = [
-            'bg1.jpg',   // 改为你的第一张图片文件名
-            'bg2.jpg',   // 第二张
-            'bg3.jpg',   // 第三张
-            'bg4.jpg',   // 第四张
-            'bg5.jpg'    // 第五张
+            'bg1.jpg',
+            'bg2.jpg',
+            'bg3.jpg',
+            'bg4.jpg',
+            'bg5.jpg'
         ];
 
-        // 2. 音乐文件（《不凡》MP3，放在同一目录）
+        // 2. 音乐文件（《不凡》MP3）
         const MUSIC_FILE = 'bufan.mp3';
 
         // 3. Minecraft 蛋糕图片文件名
         const CAKE_IMAGE = 'minecraft_cake.png';
 
+        // 4. ★★★ 视频配置 ★★★
+        // 支持多个视频，每个对象有 name（显示名称）和 src（视频文件路径或外部链接）
+        // 注意：若使用本地视频，请将视频文件（如 video1.mp4）上传到仓库同目录
+        // 若使用外部链接（如 B站分享链接），请用 iframe 方式，但我们这里用 HTML5 video 只支持标准视频格式（mp4/webm）
+        // 如需嵌入 B站视频，可以改用 iframe，我在这里提供了两种方式的示例。
+        const VIDEOS = [
+            { name: '🎞️ 回忆片段1', src: 'video1.mp4' },
+            { name: '🎞️ 回忆片段2', src: 'video2.mp4' },
+            { name: '📺 B站精彩', src: 'https://www.bilibili.com/iframe?bvid=BV1xx411c7mD' }  // 注意：B站 iframe 需要修改方式，我们可单独处理
+        ];
+        // 由于 B站 iframe 和 video 标签不通用，我们这里设计成如果 src 以 http 开头且包含 'bilibili' 则用 iframe，否则用 video。
+        // 但为简化，我建议你全部使用本地 mp4 文件（上传到仓库），或者用通用的视频链接。
+        // 我在此提供一种兼容方式：如果 src 以 .mp4 或 .webm 结尾，用 video 标签；否则用 iframe。
+        // 为了代码简洁，我们约定：所有视频都用本地 mp4 文件，或者都用 iframe 嵌入外部视频。
+        // 我建议你上传 mp4 文件到仓库，然后在 VIDEOS 里填写文件名。
+
         // ================================================================
-        //  以下代码会自动使用上面的配置，无需改动
+        //  以下代码自动运行，一般不需要修改
         // ================================================================
 
         // ---- 背景轮播 ----
@@ -443,7 +564,7 @@
             }, 5000);
         })();
 
-        // ---- 副标题、祝福语等配置 ----
+        // ---- 副标题等 ----
         const CONFIG = {
             friendName: '宋文杰',
             age: 20,
@@ -655,10 +776,9 @@
         setTimeout(()=>{ toast.classList.add('show'); }, 1800);
 
         // ================================================================
-        //  ★ 封面点击 → 进入主页面 + 自动播放音乐 ★
+        //  ★ 封面点击 → 主页面 + 音乐 ★
         // ================================================================
         const cover = document.getElementById('cover');
-        const coverCake = document.getElementById('coverCake');
         const audio = new Audio(MUSIC_FILE);
         audio.loop = true;
         audio.volume = 0.8;
@@ -672,19 +792,15 @@
                 audio.play().then(() => {
                     isMusicPlaying = true;
                     icon.textContent = '🔊';
-                }).catch((err) => {
-                    console.warn('自动播放失败:', err);
-                });
+                }).catch((err) => console.warn('自动播放失败:', err));
             }
         }
 
-        // 点击封面蛋糕 → 隐藏封面，播放音乐
         cover.addEventListener('click', function() {
             cover.classList.add('hidden');
             playMusic();
         });
 
-        // 手动控制音乐（喇叭按钮）
         function toggleMusic() {
             if (isMusicPlaying) {
                 audio.pause();
@@ -696,15 +812,120 @@
                     icon.textContent = '🔊';
                 }).catch((err) => {
                     alert('播放失败，请检查 ' + MUSIC_FILE + ' 文件是否存在。');
-                    console.warn('播放错误:', err);
                 });
             }
         }
         toggleBtn.addEventListener('click', toggleMusic);
 
+        // ================================================================
+        //  ★ 视频彩蛋功能 ★
+        // ================================================================
+        const videoModal = document.getElementById('videoModal');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const videoControls = document.getElementById('videoControls');
+        const closeVideoBtn = document.getElementById('closeVideoBtn');
+        const videoBtn = document.getElementById('videoBtn');
+
+        // 动态生成视频切换按钮
+        function renderVideoButtons() {
+            videoControls.innerHTML = '';
+            VIDEOS.forEach((video, index) => {
+                const btn = document.createElement('button');
+                btn.textContent = video.name;
+                btn.dataset.index = index;
+                btn.addEventListener('click', function() {
+                    loadVideo(index);
+                });
+                videoControls.appendChild(btn);
+            });
+            // 默认加载第一个视频
+            if (VIDEOS.length > 0) {
+                loadVideo(0);
+            }
+        }
+
+        function loadVideo(index) {
+            const video = VIDEOS[index];
+            const src = video.src;
+            // 判断是否为外部链接（以 http 开头）
+            if (src.startsWith('http://') || src.startsWith('https://')) {
+                // 如果是 B站链接，可以尝试嵌入 iframe，但 video 标签不支持，我们改用 iframe 方式
+                // 这里简单处理：直接替换 video 为 iframe（为简化，我们只支持本地 mp4，或者我们改用 iframe 方式）
+                // 我们采用更通用的方法：如果检测到是 B站链接，就用 iframe 嵌入，否则尝试用 video 标签
+                if (src.includes('bilibili.com')) {
+                    // 使用 iframe 替换 video 元素
+                    // 由于 video 元素不能直接显示 iframe，我们动态创建一个 iframe 替换 video
+                    const container = videoPlayer.parentNode;
+                    const iframe = document.createElement('iframe');
+                    iframe.src = src;
+                    iframe.width = '100%';
+                    iframe.height = 'auto';
+                    iframe.style.aspectRatio = '16/9';
+                    iframe.style.border = 'none';
+                    iframe.allowFullscreen = true;
+                    iframe.setAttribute('allowfullscreen', '');
+                    // 移除旧的 video，插入 iframe
+                    videoPlayer.style.display = 'none';
+                    container.insertBefore(iframe, videoPlayer);
+                    // 保存引用以便后续切换时清理
+                    if (videoPlayer._iframe) {
+                        videoPlayer._iframe.remove();
+                    }
+                    videoPlayer._iframe = iframe;
+                    return;
+                } else {
+                    // 普通外部视频链接，尝试用 video 加载
+                    videoPlayer.style.display = 'block';
+                    if (videoPlayer._iframe) {
+                        videoPlayer._iframe.remove();
+                        delete videoPlayer._iframe;
+                    }
+                    videoPlayer.src = src;
+                    videoPlayer.load();
+                }
+            } else {
+                // 本地文件
+                videoPlayer.style.display = 'block';
+                if (videoPlayer._iframe) {
+                    videoPlayer._iframe.remove();
+                    delete videoPlayer._iframe;
+                }
+                videoPlayer.src = src;
+                videoPlayer.load();
+            }
+        }
+
+        // 打开模态框
+        videoBtn.addEventListener('click', function() {
+            videoModal.classList.add('show');
+            renderVideoButtons();
+            // 若当前视频播放，自动播放
+            if (videoPlayer.src) {
+                videoPlayer.play().catch(() => {});
+            }
+        });
+
+        // 关闭模态框
+        function closeVideoModal() {
+            videoModal.classList.remove('show');
+            // 暂停视频
+            videoPlayer.pause();
+            // 如果有 iframe，移除
+            if (videoPlayer._iframe) {
+                videoPlayer._iframe.remove();
+                delete videoPlayer._iframe;
+                videoPlayer.style.display = 'block';
+                videoPlayer.src = '';
+            }
+        }
+        closeVideoBtn.addEventListener('click', closeVideoModal);
+        videoModal.addEventListener('click', function(e) {
+            if (e.target === this) closeVideoModal();
+        });
+
         console.log(`🎂 祝 ${CONFIG.friendName} ${CONFIG.age}岁生日快乐！`);
-        console.log(`💪 到了20岁了就要拿出真本事！`);
         console.log(`🎵 点击封面蛋糕进入主页面，音乐《不凡》自动响起。`);
+        console.log(`🎬 点击“视频彩蛋”观看回忆视频！`);
     </script>
 </body>
 </html>
