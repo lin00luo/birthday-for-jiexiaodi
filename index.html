@@ -5,14 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎂 宋文杰 · 20岁生日快乐</title>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; user-select:none; }
-        body { width:100vw; height:100vh; overflow:hidden; background:#0b0b1a; font-family:'Arial','PingFang SC',sans-serif; touch-action:manipulation; }
+        /* ===== 全局重置 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
 
-        /* ===== 封面页 ===== */
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #0b0b1a;
+            font-family: 'Arial', 'PingFang SC', 'Helvetica Neue', sans-serif;
+            touch-action: manipulation;
+        }
+
+        /* ===== 封面页（纯黑 + 中间蛋糕） ===== */
         #cover {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: #000;
             display: flex;
             justify-content: center;
@@ -32,54 +48,68 @@
             image-rendering: pixelated;
             transition: transform 0.2s;
         }
-        #cover img:active { transform: scale(0.92); }
+        #cover img:active {
+            transform: scale(0.92);
+        }
 
-        /* ===== 背景轮播 ===== */
+        /* ===== 背景轮播层 ===== */
         #bg-slider {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
             overflow: hidden;
         }
         .bg-slide {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             opacity: 0;
             transition: opacity 2s ease-in-out;
+            will-change: opacity;
         }
-        .bg-slide.active { opacity: 1; }
+        .bg-slide.active {
+            opacity: 1;
+        }
 
-        /* ===== 星星 ===== */
+        /* ===== 背景星星 ===== */
         .stars {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 0;
             overflow: hidden;
         }
         .star {
             position: absolute;
-            width: 3px; height: 3px;
+            width: 3px;
+            height: 3px;
             background: #fff;
             border-radius: 50%;
-            animation: twinkle var(--dur,3s) ease-in-out infinite alternate;
+            animation: twinkle var(--dur, 3s) ease-in-out infinite alternate;
         }
         @keyframes twinkle {
-            0% { opacity:0.2; transform:scale(0.8); }
-            100% { opacity:1; transform:scale(1.2); }
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* ===== Canvas粒子 ===== */
+        /* ===== Canvas 粒子 ===== */
         #particleCanvas {
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             pointer-events: none;
             z-index: 1;
         }
@@ -96,6 +126,7 @@
             height: 100vh;
             padding: 10px 0;
         }
+
         .title {
             color: #ffe6a7;
             font-size: clamp(2rem, 8vw, 3.2rem);
@@ -109,9 +140,10 @@
             line-height: 1.2;
         }
         @keyframes flicker {
-            0% { opacity:0.75; text-shadow:0 0 15px #ff9a9e,0 0 40px #fecfef; }
-            100% { opacity:1; text-shadow:0 0 30px #ff9a9e,0 0 70px #fecfef,0 0 120px #a18cd1; }
+            0% { opacity: 0.75; text-shadow: 0 0 15px #ff9a9e, 0 0 40px #fecfef; }
+            100% { opacity: 1; text-shadow: 0 0 30px #ff9a9e, 0 0 70px #fecfef, 0 0 120px #a18cd1; }
         }
+
         .sub-title {
             color: rgba(255,255,255,0.9);
             font-size: clamp(1rem, 3.5vw, 1.5rem);
@@ -126,9 +158,10 @@
             text-align: center;
             font-weight: 300;
         }
-        .sub-title .highlight { font-weight:700; color:#ffd700; text-shadow:0 0 20px rgba(255,215,0,0.4); }
-        .sub-title .age { color:#ff9ff3; font-weight:600; }
-        .sub-title .hobby { color:#54a0ff; font-weight:600; }
+        .sub-title .highlight { font-weight: 700; color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.4); }
+        .sub-title .age { color: #ff9ff3; font-weight: 600; }
+        .sub-title .hobby { color: #54a0ff; font-weight: 600; }
+
         .blessing-carousel {
             color: rgba(255,255,255,0.75);
             font-size: clamp(0.85rem, 2.8vw, 1.2rem);
@@ -153,10 +186,11 @@
             animation: fadeSlide 0.6s ease;
         }
         @keyframes fadeSlide {
-            0% { opacity:0; transform:translateY(10px); }
-            100% { opacity:1; transform:translateY(0); }
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
+        /* ===== 蛋糕容器（显示 Minecraft 蛋糕图片） ===== */
         .cake-wrapper {
             width: min(280px, 70vw);
             height: min(280px, 70vw);
@@ -165,6 +199,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
         .cake-wrapper img {
             width: 100%;
@@ -173,6 +208,7 @@
             image-rendering: pixelated;
         }
 
+        /* ===== 按钮 ===== */
         .btn-boom {
             margin-top: 14px;
             padding: 12px 40px;
@@ -192,14 +228,19 @@
             position: relative;
             overflow: hidden;
         }
-        .btn-boom:active { transform:scale(0.92); box-shadow:0 4px 20px rgba(255,75,43,0.8); }
         .btn-boom::before {
-            content:'';
-            position:absolute;
-            top:-50%; left:-50%;
-            width:200%; height:200%;
-            background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 70%);
-            pointer-events:none;
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 70%);
+            pointer-events: none;
+        }
+        .btn-boom:active {
+            transform: scale(0.92);
+            box-shadow: 0 4px 20px rgba(255,75,43,0.8);
         }
 
         .hint {
@@ -216,7 +257,8 @@
 
         .toast {
             position: fixed;
-            top: 50%; left: 50%;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%) scale(0);
             background: rgba(10,8,30,0.92);
             backdrop-filter: blur(16px);
@@ -238,38 +280,46 @@
             opacity: 1;
             pointer-events: auto;
         }
-        .toast .emoji-big { font-size:3.6rem; display:block; margin-bottom:6px; }
+        .toast .emoji-big {
+            font-size: 3.6rem;
+            display: block;
+            margin-bottom: 6px;
+        }
         .toast .msg {
-            font-size: clamp(1.4rem,5vw,2rem);
-            font-weight:700;
-            line-height:1.5;
+            font-size: clamp(1.4rem, 5vw, 2rem);
+            font-weight: 700;
+            line-height: 1.5;
             background: linear-gradient(135deg, #ffd700, #ff6b6b, #a29bfe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         .toast .sub-msg {
-            font-size: clamp(0.85rem,2.8vw,1.1rem);
+            font-size: clamp(0.85rem, 2.8vw, 1.1rem);
             color: rgba(255,255,255,0.7);
-            margin-top:8px;
-            font-weight:300;
-            letter-spacing:1px;
+            margin-top: 8px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            -webkit-text-fill-color: rgba(255,255,255,0.7);
         }
         .toast .close-btn {
-            margin-top:18px;
-            padding:10px 36px;
+            margin-top: 18px;
+            padding: 10px 36px;
             background: linear-gradient(135deg, #ffd700, #f9a825);
-            border:none;
-            border-radius:40px;
-            font-size:1rem;
-            font-weight:700;
-            color:#1a1a2e;
-            cursor:pointer;
-            transition:transform 0.15s;
-            box-shadow:0 4px 24px rgba(255,215,0,0.3);
+            border: none;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            cursor: pointer;
+            transition: transform 0.15s;
+            box-shadow: 0 4px 24px rgba(255,215,0,0.3);
         }
-        .toast .close-btn:active { transform:scale(0.92); }
+        .toast .close-btn:active {
+            transform: scale(0.92);
+        }
 
+        /* ===== 音频控制按钮 ===== */
         .audio-toggle {
             position: fixed;
             bottom: 20px;
@@ -290,22 +340,29 @@
             transition: all 0.3s;
             touch-action: manipulation;
         }
-        .audio-toggle:active { transform:scale(0.9); background:rgba(255,255,255,0.15); }
-        .audio-toggle .icon { line-height:1; }
+        .audio-toggle:active {
+            transform: scale(0.9);
+            background: rgba(255,255,255,0.15);
+        }
+        .audio-toggle .icon { line-height: 1; }
 
-        @media (max-width:400px) {
-            .cake-wrapper { width:min(220px,68vw); height:min(220px,68vw); }
+        /* ===== 响应式 ===== */
+        @media (max-width: 400px) {
+            .cake-wrapper {
+                width: min(220px, 68vw);
+                height: min(220px, 68vw);
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== 封面页 ===== -->
+    <!-- ===== 封面页（纯黑 + Minecraft 蛋糕） ===== -->
     <div id="cover">
         <img src="minecraft_cake.png" alt="Minecraft Cake" id="coverCake">
     </div>
 
-    <!-- ===== 背景轮播 ===== -->
+    <!-- ===== 背景轮播容器 ===== -->
     <div id="bg-slider"></div>
 
     <!-- ===== 星星 ===== -->
@@ -314,7 +371,7 @@
     <!-- ===== 粒子 Canvas ===== -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- ===== 弹窗 ===== -->
+    <!-- ===== 祝福弹窗 ===== -->
     <div class="toast" id="toast">
         <span class="emoji-big">🎉</span>
         <div class="msg">生日快乐！</div>
@@ -329,6 +386,7 @@
         <div class="blessing-carousel" id="blessingCarousel">
             <span>✨ 愿道友大道可期，道心永固 ✨</span>
         </div>
+        <!-- 蛋糕容器（显示 Minecraft 蛋糕图片） -->
         <div class="cake-wrapper" id="cakeWrapper">
             <img src="minecraft_cake.png" alt="Minecraft Cake" id="mainCake">
         </div>
@@ -336,27 +394,33 @@
         <div class="hint">👆 点击蛋糕进入 · 点击许愿</div>
     </div>
 
-    <!-- ===== 音频控制 ===== -->
+    <!-- ===== 音频控制按钮 ===== -->
     <div class="audio-toggle" id="audioToggle" title="播放/暂停《不凡》">
         <span class="icon">🔇</span>
     </div>
 
     <script>
         // ================================================================
-        //  ★★★ 请在这里修改你的文件名 ★★★
+        //  ★ 配置区 —— 修改文件名 ★
         // ================================================================
+
+        // 1. 背景图片列表（请把图片文件放在同一目录，按实际文件名修改）
         const BG_IMAGES = [
-            'bg1.jpg',   // 请改成你的实际图片文件名
-            'bg2.jpg',
-            'bg3.jpg',
-            'bg4.jpg',   // 你的第四张
-            'bg5.jpg'    // 你的第五张
+            'bg1.jpg',   // 改为你的第一张图片文件名
+            'bg2.jpg',   // 第二张
+            'bg3.jpg',   // 第三张
+            'bg4.jpg',   // 第四张
+            'bg5.jpg'    // 第五张
         ];
+
+        // 2. 音乐文件（《不凡》MP3，放在同一目录）
         const MUSIC_FILE = 'bufan.mp3';
+
+        // 3. Minecraft 蛋糕图片文件名
         const CAKE_IMAGE = 'minecraft_cake.png';
 
         // ================================================================
-        //  以下代码自动运行，无需修改
+        //  以下代码会自动使用上面的配置，无需改动
         // ================================================================
 
         // ---- 背景轮播 ----
@@ -379,7 +443,7 @@
             }, 5000);
         })();
 
-        // ---- 配置 ----
+        // ---- 副标题、祝福语等配置 ----
         const CONFIG = {
             friendName: '宋文杰',
             age: 20,
@@ -424,7 +488,7 @@
             }
         })();
 
-        // ---- Canvas粒子 ----
+        // ---- Canvas 粒子 ----
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
         let width, height;
@@ -557,7 +621,7 @@
         }
         setInterval(nextBlessing, 4000);
 
-        // ---- 烟花 ----
+        // ---- 烟花 + 弹窗 ----
         const boomBtn = document.getElementById('boomBtn');
         const toast = document.getElementById('toast');
         const toastSubMsg = document.getElementById('toastSubMsg');
@@ -591,9 +655,10 @@
         setTimeout(()=>{ toast.classList.add('show'); }, 1800);
 
         // ================================================================
-        //  ★ 封面点击 + 音乐 ★
+        //  ★ 封面点击 → 进入主页面 + 自动播放音乐 ★
         // ================================================================
         const cover = document.getElementById('cover');
+        const coverCake = document.getElementById('coverCake');
         const audio = new Audio(MUSIC_FILE);
         audio.loop = true;
         audio.volume = 0.8;
@@ -607,15 +672,19 @@
                 audio.play().then(() => {
                     isMusicPlaying = true;
                     icon.textContent = '🔊';
-                }).catch(() => {});
+                }).catch((err) => {
+                    console.warn('自动播放失败:', err);
+                });
             }
         }
 
+        // 点击封面蛋糕 → 隐藏封面，播放音乐
         cover.addEventListener('click', function() {
             cover.classList.add('hidden');
             playMusic();
         });
 
+        // 手动控制音乐（喇叭按钮）
         function toggleMusic() {
             if (isMusicPlaying) {
                 audio.pause();
@@ -625,12 +694,17 @@
                 audio.play().then(() => {
                     isMusicPlaying = true;
                     icon.textContent = '🔊';
-                }).catch(() => {});
+                }).catch((err) => {
+                    alert('播放失败，请检查 ' + MUSIC_FILE + ' 文件是否存在。');
+                    console.warn('播放错误:', err);
+                });
             }
         }
         toggleBtn.addEventListener('click', toggleMusic);
 
         console.log(`🎂 祝 ${CONFIG.friendName} ${CONFIG.age}岁生日快乐！`);
+        console.log(`💪 到了20岁了就要拿出真本事！`);
+        console.log(`🎵 点击封面蛋糕进入主页面，音乐《不凡》自动响起。`);
     </script>
 </body>
 </html>
