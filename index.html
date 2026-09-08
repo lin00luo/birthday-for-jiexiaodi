@@ -21,7 +21,6 @@
             touch-action: manipulation;
         }
 
-        /* ===== 封面页 ===== */
         #cover {
             position: fixed;
             top: 0;
@@ -51,7 +50,6 @@
             transform: scale(0.92);
         }
 
-        /* ===== 背景轮播 ===== */
         #bg-slider {
             position: fixed;
             top: 0;
@@ -78,7 +76,6 @@
             opacity: 1;
         }
 
-        /* ===== 星星 ===== */
         .stars {
             position: fixed;
             top: 0;
@@ -102,7 +99,6 @@
             100% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* ===== Canvas 粒子 ===== */
         #particleCanvas {
             position: fixed;
             top: 0;
@@ -113,7 +109,6 @@
             z-index: 1;
         }
 
-        /* ===== 主内容 ===== */
         .content {
             position: relative;
             z-index: 10;
@@ -189,12 +184,12 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== 蛋糕容器（下移） ===== */
+        /* ===== 蛋糕容器 —— 大幅下移 ===== */
         .cake-wrapper {
             width: min(280px, 70vw);
             height: min(280px, 70vw);
             z-index: 10;
-            margin: 20px 0 10px 0;  /* 增加上边距使蛋糕下移 */
+            margin: 50px 0 10px 0;  /* 上边距从 20px 增加到 50px，进一步下移 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -207,7 +202,7 @@
             image-rendering: pixelated;
         }
 
-        /* ===== 按钮组（许愿 + 视频） ===== */
+        /* ===== 按钮组 ===== */
         .btn-group {
             display: flex;
             flex-wrap: wrap;
@@ -255,7 +250,6 @@
             font-weight: 300;
         }
 
-        /* ===== 弹窗（祝福 + 视频） ===== */
         .toast {
             position: fixed;
             top: 50%;
@@ -320,7 +314,6 @@
             transform: scale(0.92);
         }
 
-        /* ===== 视频模态框 ===== */
         .video-modal {
             position: fixed;
             top: 0;
@@ -398,7 +391,6 @@
             background: rgba(255,255,255,0.2);
         }
 
-        /* ===== 音频控制 ===== */
         .audio-toggle {
             position: fixed;
             bottom: 20px;
@@ -425,12 +417,11 @@
         }
         .audio-toggle .icon { line-height: 1; }
 
-        /* ===== 响应式 ===== */
         @media (max-width: 400px) {
             .cake-wrapper {
                 width: min(220px, 68vw);
                 height: min(220px, 68vw);
-                margin-top: 30px;
+                margin-top: 60px;  /* 小屏设备下也下移更多 */
             }
             .btn-group {
                 gap: 8px;
@@ -444,21 +435,14 @@
 </head>
 <body>
 
-    <!-- ===== 封面页 ===== -->
     <div id="cover">
         <img src="minecraft_cake.png" alt="Minecraft Cake" id="coverCake">
     </div>
 
-    <!-- ===== 背景轮播 ===== -->
     <div id="bg-slider"></div>
-
-    <!-- ===== 星星 ===== -->
     <div class="stars" id="stars"></div>
-
-    <!-- ===== 粒子 Canvas ===== -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- ===== 祝福弹窗 ===== -->
     <div class="toast" id="toast">
         <span class="emoji-big">🎉</span>
         <div class="msg">生日快乐！</div>
@@ -466,7 +450,6 @@
         <button class="close-btn" id="closeToastBtn">❤️ 收下祝福</button>
     </div>
 
-    <!-- ===== 视频模态框 ===== -->
     <div class="video-modal" id="videoModal">
         <div class="video-container">
             <button class="close-video" id="closeVideoBtn">✕</button>
@@ -474,24 +457,19 @@
                 <source src="" type="video/mp4">
                 您的浏览器不支持视频播放。
             </video>
-            <div class="video-controls" id="videoControls">
-                <!-- 视频切换按钮会由 JavaScript 动态生成 -->
-            </div>
+            <div class="video-controls" id="videoControls"></div>
         </div>
     </div>
 
-    <!-- ===== 主内容 ===== -->
     <div class="content" id="mainContent">
         <div class="title">🎂 HAPPY BIRTHDAY</div>
         <div class="sub-title" id="subTitle"></div>
         <div class="blessing-carousel" id="blessingCarousel">
             <span>✨ 愿道友大道可期，道心永固 ✨</span>
         </div>
-        <!-- 蛋糕容器（Minecraft 蛋糕） -->
         <div class="cake-wrapper" id="cakeWrapper">
             <img src="minecraft_cake.png" alt="Minecraft Cake" id="mainCake">
         </div>
-        <!-- 按钮组 -->
         <div class="btn-group">
             <button class="btn-boom" id="boomBtn">🎈 戳我许愿</button>
             <button class="btn-video" id="videoBtn">🎬 视频彩蛋</button>
@@ -499,7 +477,6 @@
         <div class="hint">👆 点击蛋糕进入 · 点击许愿</div>
     </div>
 
-    <!-- ===== 音频控制 ===== -->
     <div class="audio-toggle" id="audioToggle" title="播放/暂停《不凡》">
         <span class="icon">🔇</span>
     </div>
@@ -509,7 +486,6 @@
         //  ★ 配置区 —— 修改以下内容 ★
         // ================================================================
 
-        // 1. 背景图片列表（按实际文件名修改）
         const BG_IMAGES = [
             'bg1.jpg',
             'bg2.jpg',
@@ -518,27 +494,14 @@
             'bg5.jpg'
         ];
 
-        // 2. 音乐文件（《不凡》MP3）
         const MUSIC_FILE = 'bufan.mp3';
-
-        // 3. Minecraft 蛋糕图片文件名
         const CAKE_IMAGE = 'minecraft_cake.png';
 
-        // 4. ★★★ 视频配置 ★★★
-        // 支持多个视频，每个对象有 name（显示名称）和 src（视频文件路径或外部链接）
-        // 注意：若使用本地视频，请将视频文件（如 video1.mp4）上传到仓库同目录
-        // 若使用外部链接（如 B站分享链接），请用 iframe 方式，但我们这里用 HTML5 video 只支持标准视频格式（mp4/webm）
-        // 如需嵌入 B站视频，可以改用 iframe，我在这里提供了两种方式的示例。
+        // ★★★ 视频配置 ★★★
         const VIDEOS = [
             { name: '🎞️ 回忆片段1', src: 'video1.mp4' },
             { name: '🎞️ 回忆片段2', src: 'video2.mp4' },
-            { name: '📺 B站精彩', src: 'https://www.bilibili.com/iframe?bvid=BV1xx411c7mD' }  // 注意：B站 iframe 需要修改方式，我们可单独处理
         ];
-        // 由于 B站 iframe 和 video 标签不通用，我们这里设计成如果 src 以 http 开头且包含 'bilibili' 则用 iframe，否则用 video。
-        // 但为简化，我建议你全部使用本地 mp4 文件（上传到仓库），或者用通用的视频链接。
-        // 我在此提供一种兼容方式：如果 src 以 .mp4 或 .webm 结尾，用 video 标签；否则用 iframe。
-        // 为了代码简洁，我们约定：所有视频都用本地 mp4 文件，或者都用 iframe 嵌入外部视频。
-        // 我建议你上传 mp4 文件到仓库，然后在 VIDEOS 里填写文件名。
 
         // ================================================================
         //  以下代码自动运行，一般不需要修改
@@ -775,9 +738,7 @@
         toast.addEventListener('click', function(e){ if(e.target===this) closeToastFn(); });
         setTimeout(()=>{ toast.classList.add('show'); }, 1800);
 
-        // ================================================================
-        //  ★ 封面点击 → 主页面 + 音乐 ★
-        // ================================================================
+        // ---- 封面 + 音乐 ----
         const cover = document.getElementById('cover');
         const audio = new Audio(MUSIC_FILE);
         audio.loop = true;
@@ -817,16 +778,13 @@
         }
         toggleBtn.addEventListener('click', toggleMusic);
 
-        // ================================================================
-        //  ★ 视频彩蛋功能 ★
-        // ================================================================
+        // ---- 视频彩蛋 ----
         const videoModal = document.getElementById('videoModal');
         const videoPlayer = document.getElementById('videoPlayer');
         const videoControls = document.getElementById('videoControls');
         const closeVideoBtn = document.getElementById('closeVideoBtn');
         const videoBtn = document.getElementById('videoBtn');
 
-        // 动态生成视频切换按钮
         function renderVideoButtons() {
             videoControls.innerHTML = '';
             VIDEOS.forEach((video, index) => {
@@ -838,7 +796,6 @@
                 });
                 videoControls.appendChild(btn);
             });
-            // 默认加载第一个视频
             if (VIDEOS.length > 0) {
                 loadVideo(0);
             }
@@ -847,14 +804,8 @@
         function loadVideo(index) {
             const video = VIDEOS[index];
             const src = video.src;
-            // 判断是否为外部链接（以 http 开头）
             if (src.startsWith('http://') || src.startsWith('https://')) {
-                // 如果是 B站链接，可以尝试嵌入 iframe，但 video 标签不支持，我们改用 iframe 方式
-                // 这里简单处理：直接替换 video 为 iframe（为简化，我们只支持本地 mp4，或者我们改用 iframe 方式）
-                // 我们采用更通用的方法：如果检测到是 B站链接，就用 iframe 嵌入，否则尝试用 video 标签
                 if (src.includes('bilibili.com')) {
-                    // 使用 iframe 替换 video 元素
-                    // 由于 video 元素不能直接显示 iframe，我们动态创建一个 iframe 替换 video
                     const container = videoPlayer.parentNode;
                     const iframe = document.createElement('iframe');
                     iframe.src = src;
@@ -864,17 +815,14 @@
                     iframe.style.border = 'none';
                     iframe.allowFullscreen = true;
                     iframe.setAttribute('allowfullscreen', '');
-                    // 移除旧的 video，插入 iframe
                     videoPlayer.style.display = 'none';
                     container.insertBefore(iframe, videoPlayer);
-                    // 保存引用以便后续切换时清理
                     if (videoPlayer._iframe) {
                         videoPlayer._iframe.remove();
                     }
                     videoPlayer._iframe = iframe;
                     return;
                 } else {
-                    // 普通外部视频链接，尝试用 video 加载
                     videoPlayer.style.display = 'block';
                     if (videoPlayer._iframe) {
                         videoPlayer._iframe.remove();
@@ -884,7 +832,6 @@
                     videoPlayer.load();
                 }
             } else {
-                // 本地文件
                 videoPlayer.style.display = 'block';
                 if (videoPlayer._iframe) {
                     videoPlayer._iframe.remove();
@@ -895,22 +842,17 @@
             }
         }
 
-        // 打开模态框
         videoBtn.addEventListener('click', function() {
             videoModal.classList.add('show');
             renderVideoButtons();
-            // 若当前视频播放，自动播放
             if (videoPlayer.src) {
                 videoPlayer.play().catch(() => {});
             }
         });
 
-        // 关闭模态框
         function closeVideoModal() {
             videoModal.classList.remove('show');
-            // 暂停视频
             videoPlayer.pause();
-            // 如果有 iframe，移除
             if (videoPlayer._iframe) {
                 videoPlayer._iframe.remove();
                 delete videoPlayer._iframe;
