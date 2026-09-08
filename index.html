@@ -18,13 +18,38 @@
             height: 100vh;
             overflow: hidden;
             background: #0b0b1a;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             font-family: 'Arial', 'PingFang SC', 'Helvetica Neue', sans-serif;
             touch-action: manipulation;
-            position: relative;
+        }
+
+        /* ===== 封面页（纯黑 + 中间蛋糕） ===== */
+        #cover {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+            transition: opacity 0.8s ease;
+        }
+        #cover.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #cover img {
+            width: min(300px, 60vw);
+            height: auto;
+            display: block;
+            image-rendering: pixelated; /* 像素风格，可选 */
+            transition: transform 0.2s;
+        }
+        #cover img:active {
+            transform: scale(0.92);
         }
 
         /* ===== 背景轮播层 ===== */
@@ -98,6 +123,7 @@
             align-items: center;
             justify-content: center;
             width: 100%;
+            height: 100vh;
             padding: 10px 0;
         }
 
@@ -164,215 +190,25 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
+        /* ===== 蛋糕容器（显示 Minecraft 蛋糕图片） ===== */
         .cake-wrapper {
             width: min(280px, 70vw);
             height: min(280px, 70vw);
-            perspective: 900px;
             z-index: 10;
-            touch-action: pan-y;
             margin: 4px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: relative;
         }
-        .cake {
+        .cake-wrapper img {
             width: 100%;
             height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
+            object-fit: contain;
+            image-rendering: pixelated; /* 保留像素感 */
         }
 
-        .layer {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            border: 3px solid rgba(0,0,0,0.08);
-            box-shadow: inset 0 -8px 20px rgba(0,0,0,0.15);
-        }
-        .plate {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) translateY(72px);
-            width: 240px;
-            height: 16px;
-            border-radius: 50%;
-            background: radial-gradient(ellipse at 50% 40%, #e8e0d8, #b8a89a);
-            border: 2px solid #a09080;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-            z-index: 0;
-        }
-        .layer-1 {
-            width: 210px;
-            height: 68px;
-            transform: translate(-50%, -50%) translateY(38px);
-            background: linear-gradient(180deg, #f8b88b, #e8936a);
-            border-color: #c97a56;
-        }
-        .layer-1::after {
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: 10%;
-            width: 80%;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            filter: blur(2px);
-        }
-        .layer-2 {
-            width: 178px;
-            height: 58px;
-            transform: translate(-50%, -50%) translateY(-4px);
-            background: linear-gradient(180deg, #fccfaf, #f5b88a);
-            border-color: #d99a72;
-        }
-        .layer-2::after {
-            content: '';
-            position: absolute;
-            top: 5px;
-            left: 12%;
-            width: 76%;
-            height: 6px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.18);
-            filter: blur(2px);
-        }
-        .layer-3 {
-            width: 146px;
-            height: 48px;
-            transform: translate(-50%, -50%) translateY(-44px);
-            background: linear-gradient(180deg, #fde2d4, #f5c8b8);
-            border-color: #dbb09e;
-        }
-        .layer-3::after {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 14%;
-            width: 72%;
-            height: 5px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            filter: blur(2px);
-        }
-
-        .cream-piping {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        .cream-piping .dot {
-            position: absolute;
-            width: 22px;
-            height: 14px;
-            background: #fff9f0;
-            border-radius: 50% 50% 50% 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        .cream-piping .dot:nth-child(1) { top: 28%; left: 8%; transform: rotate(-20deg); }
-        .cream-piping .dot:nth-child(2) { top: 28%; right: 8%; transform: rotate(20deg) scaleX(-1); }
-        .cream-piping .dot:nth-child(3) { top: 10%; left: 28%; transform: rotate(-10deg) scale(0.9); }
-        .cream-piping .dot:nth-child(4) { top: 10%; right: 28%; transform: rotate(10deg) scaleX(-1) scale(0.9); }
-        .cream-piping .dot:nth-child(5) { top: -4%; left: 48%; transform: rotate(0deg) scale(0.8); }
-
-        .sprinkles {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) translateY(-30px);
-            width: 120px;
-            height: 30px;
-            pointer-events: none;
-        }
-        .sprinkles span {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-        }
-        .sprinkles span:nth-child(1) { left: 5%; top: 10%; background: #ff6b6b; }
-        .sprinkles span:nth-child(2) { left: 20%; top: 60%; background: #feca57; }
-        .sprinkles span:nth-child(3) { left: 35%; top: 5%; background: #48dbfb; }
-        .sprinkles span:nth-child(4) { left: 50%; top: 70%; background: #ff9ff3; }
-        .sprinkles span:nth-child(5) { left: 65%; top: 15%; background: #54a0ff; }
-        .sprinkles span:nth-child(6) { left: 80%; top: 55%; background: #ff9f43; }
-        .sprinkles span:nth-child(7) { left: 92%; top: 10%; background: #00d2d3; }
-
-        .candle-group {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-        .candle {
-            position: absolute;
-            width: 10px;
-            height: 34px;
-            border-radius: 3px 3px 0 0;
-            background: linear-gradient(180deg, #ff6b6b, #ee5a24);
-            box-shadow: 0 0 20px rgba(255,107,107,0.3);
-            transform-origin: bottom center;
-            pointer-events: auto;
-            cursor: pointer;
-        }
-        .candle:nth-child(1) { left: -14px; top: -62px; height: 36px; background: linear-gradient(180deg, #ff6b6b, #e84118); }
-        .candle:nth-child(2) { left: 4px; top: -68px; height: 42px; background: linear-gradient(180deg, #feca57, #f0932b); box-shadow: 0 0 20px rgba(254,202,87,0.3); }
-        .candle:nth-child(3) { left: 22px; top: -62px; height: 36px; background: linear-gradient(180deg, #a29bfe, #6c5ce7); box-shadow: 0 0 20px rgba(162,155,254,0.3); }
-        .candle::after {
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: 2px;
-            right: 2px;
-            height: 3px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 2px;
-        }
-
-        .flame-group {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-        .flame {
-            position: absolute;
-            width: 16px;
-            height: 24px;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            animation: burn 0.4s infinite alternate ease-in-out;
-            transform-origin: bottom center;
-            pointer-events: none;
-            filter: blur(1px);
-        }
-        .flame::after {
-            content: '';
-            position: absolute;
-            top: 20%;
-            left: 25%;
-            width: 40%;
-            height: 30%;
-            background: rgba(255,255,255,0.6);
-            border-radius: 50%;
-            filter: blur(3px);
-        }
-        .flame:nth-child(1) { left: -14px; top: -78px; background: radial-gradient(circle at 50% 100%, #f9d423, #f7971e); box-shadow: 0 0 50px #f7971e; animation-delay: 0s; }
-        .flame:nth-child(2) { left: 4px; top: -84px; background: radial-gradient(circle at 50% 100%, #fff5a0, #f9d423); box-shadow: 0 0 60px #f9d423; animation-delay: 0.15s; width: 20px; height: 30px; }
-        .flame:nth-child(3) { left: 22px; top: -78px; background: radial-gradient(circle at 50% 100%, #a29bfe, #6c5ce7); box-shadow: 0 0 50px #a29bfe; animation-delay: 0.3s; }
-        @keyframes burn {
-            0% { transform: scale(1) rotate(-4deg) translateY(0); }
-            100% { transform: scale(1.12) rotate(4deg) translateY(-4px); }
-        }
-
+        /* ===== 按钮 ===== */
         .btn-boom {
             margin-top: 14px;
             padding: 12px 40px;
@@ -483,7 +319,7 @@
             transform: scale(0.92);
         }
 
-        /* ===== 音频控制按钮（喇叭） ===== */
+        /* ===== 音频控制按钮 ===== */
         .audio-toggle {
             position: fixed;
             bottom: 20px;
@@ -512,24 +348,19 @@
 
         /* ===== 响应式 ===== */
         @media (max-width: 400px) {
-            .cake-wrapper { width: min(220px, 68vw); height: min(220px, 68vw); }
-            .layer-1 { width: 170px; height: 54px; transform: translate(-50%, -50%) translateY(32px); }
-            .layer-2 { width: 144px; height: 46px; transform: translate(-50%, -50%) translateY(-2px); }
-            .layer-3 { width: 118px; height: 38px; transform: translate(-50%, -50%) translateY(-34px); }
-            .plate { width: 190px; height: 12px; transform: translate(-50%, -50%) translateY(58px); }
-            .candle:nth-child(1) { left: -10px; top: -50px; height: 28px; width: 8px; }
-            .candle:nth-child(2) { left: 4px; top: -56px; height: 34px; width: 8px; }
-            .candle:nth-child(3) { left: 18px; top: -50px; height: 28px; width: 8px; }
-            .flame:nth-child(1) { left: -10px; top: -64px; width: 12px; height: 18px; }
-            .flame:nth-child(2) { left: 4px; top: -70px; width: 16px; height: 24px; }
-            .flame:nth-child(3) { left: 18px; top: -64px; width: 12px; height: 18px; }
-            .sprinkles { width: 90px; transform: translate(-50%, -50%) translateY(-22px); }
-            .sprinkles span { width: 6px; height: 6px; }
-            .cream-piping .dot { width: 16px; height: 10px; }
+            .cake-wrapper {
+                width: min(220px, 68vw);
+                height: min(220px, 68vw);
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- ===== 封面页（纯黑 + Minecraft 蛋糕） ===== -->
+    <div id="cover">
+        <img src="minecraft_cake.png" alt="Minecraft Cake" id="coverCake">
+    </div>
 
     <!-- ===== 背景轮播容器 ===== -->
     <div id="bg-slider"></div>
@@ -549,36 +380,18 @@
     </div>
 
     <!-- ===== 主内容 ===== -->
-    <div class="content">
+    <div class="content" id="mainContent">
         <div class="title">🎂 HAPPY BIRTHDAY</div>
         <div class="sub-title" id="subTitle"></div>
         <div class="blessing-carousel" id="blessingCarousel">
             <span>✨ 愿道友大道可期，道心永固 ✨</span>
         </div>
+        <!-- 蛋糕容器（显示 Minecraft 蛋糕图片） -->
         <div class="cake-wrapper" id="cakeWrapper">
-            <div class="cake" id="cake">
-                <div class="plate"></div>
-                <div class="layer layer-1"></div>
-                <div class="layer layer-2"></div>
-                <div class="layer layer-3"></div>
-                <div class="cream-piping">
-                    <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-                </div>
-                <div class="sprinkles">
-                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                </div>
-                <div class="candle-group">
-                    <div class="candle" data-index="0"></div>
-                    <div class="candle" data-index="1"></div>
-                    <div class="candle" data-index="2"></div>
-                </div>
-                <div class="flame-group">
-                    <div class="flame"></div><div class="flame"></div><div class="flame"></div>
-                </div>
-            </div>
+            <img src="minecraft_cake.png" alt="Minecraft Cake" id="mainCake">
         </div>
         <button class="btn-boom" id="boomBtn">🎈 戳我许愿</button>
-        <div class="hint">👆 滑动蛋糕 · 点击许愿</div>
+        <div class="hint">👆 点击蛋糕进入 · 点击许愿</div>
     </div>
 
     <!-- ===== 音频控制按钮 ===== -->
@@ -588,19 +401,24 @@
 
     <script>
         // ================================================================
-        //  ★ 配置区 —— 修改图片和音乐文件 ★
+        //  ★ 配置区 —— 修改文件名 ★
         // ================================================================
 
-        // 1. 背景图片列表（请把图片文件放在同一目录，填写文件名即可）
+        // 1. 背景图片列表（请把图片文件放在同一目录）
         const BG_IMAGES = [
-            'bg1.jpg',   // 替换成你的图片文件名
+            'bg1.jpg',
             'bg2.jpg',
             'bg3.jpg',
+            'bg4.jpg',
+            'bg5.jpg',
             // 想加多少张就加多少，用逗号隔开
         ];
 
         // 2. 音乐文件（《不凡》MP3，放在同一目录）
         const MUSIC_FILE = 'bufan.mp3';
+
+        // 3. Minecraft 蛋糕图片文件名
+        const CAKE_IMAGE = 'minecraft_cake.png';
 
         // ================================================================
         //  以下代码会自动使用上面的配置，无需改动
@@ -623,7 +441,7 @@
                 slides[current].classList.remove('active');
                 current = (current + 1) % slides.length;
                 slides[current].classList.add('active');
-            }, 5000); // 每5秒切换
+            }, 5000);
         })();
 
         // ---- 副标题、祝福语等配置 ----
@@ -795,34 +613,6 @@
         }
         animateParticles();
 
-        // ---- 蛋糕 3D 拖拽 ----
-        const cake = document.getElementById('cake');
-        const wrapper = document.getElementById('cakeWrapper');
-        let isDragging = false;
-        let startX, startY, rotateX=10, rotateY=0;
-        cake.style.animation = 'none';
-        cake.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-        function handleStart(cx, cy) { isDragging=true; startX=cx; startY=cy; cake.style.transition='none'; }
-        function handleMove(cx, cy) {
-            if (!isDragging) return;
-            const dx = cx - startX, dy = cy - startY;
-            rotateY += dx*0.8;
-            rotateX += dy*0.5;
-            if (rotateX>35) rotateX=35;
-            if (rotateX<-35) rotateX=-35;
-            cake.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-            startX = cx; startY = cy;
-        }
-        function handleEnd() { if(isDragging){ isDragging=false; cake.style.transition='transform 0.25s ease-out'; } }
-
-        wrapper.addEventListener('touchstart', e=>{ const t=e.touches[0]; handleStart(t.clientX,t.clientY); }, {passive:true});
-        wrapper.addEventListener('touchmove', e=>{ if(!isDragging)return; e.preventDefault(); const t=e.touches[0]; handleMove(t.clientX,t.clientY); }, {passive:false});
-        wrapper.addEventListener('touchend', handleEnd, {passive:true});
-        wrapper.addEventListener('mousedown', e=>handleStart(e.clientX,e.clientY));
-        window.addEventListener('mousemove', e=>handleMove(e.clientX,e.clientY));
-        window.addEventListener('mouseup', handleEnd);
-
         // ---- 祝福语轮播 ----
         const carouselEl = document.getElementById('blessingCarousel');
         let blessingIndex = 0;
@@ -859,17 +649,6 @@
         }
 
         boomBtn.addEventListener('click', triggerExplosion);
-        document.querySelectorAll('.candle').forEach((candle, idx) => {
-            candle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const cx = width/2 + (idx-1)*20, cy = height/2 - 60;
-                particles.forEach(p => { if(Math.random()<0.3) p.explode(cx+(Math.random()-0.5)*60, cy+(Math.random()-0.5)*60, 3); });
-                if (navigator.vibrate) navigator.vibrate(20);
-                const msgs = CONFIG.toastMessages;
-                toastSubMsg.textContent = msgs[Math.floor(Math.random()*msgs.length)];
-                toast.classList.add('show');
-            });
-        });
 
         function closeToastFn() { toast.classList.remove('show'); if(navigator.vibrate) navigator.vibrate(10); }
         closeToastBtn.addEventListener('click', closeToastFn);
@@ -877,53 +656,64 @@
         setTimeout(()=>{ toast.classList.add('show'); }, 1800);
 
         // ================================================================
-        //  ★ 背景音乐 —— 播放《不凡》MP3 ★
+        //  ★ 封面点击 → 进入主页面 + 自动播放音乐 ★
         // ================================================================
+        const cover = document.getElementById('cover');
+        const coverCake = document.getElementById('coverCake');
         const audio = new Audio(MUSIC_FILE);
-        audio.loop = true;  // 循环播放
+        audio.loop = true;
         audio.volume = 0.8;
 
         let isMusicPlaying = false;
         const toggleBtn = document.getElementById('audioToggle');
         const icon = toggleBtn.querySelector('.icon');
 
+        function playMusic() {
+            if (!isMusicPlaying) {
+                audio.play().then(() => {
+                    isMusicPlaying = true;
+                    icon.textContent = '🔊';
+                }).catch((err) => {
+                    console.warn('自动播放失败:', err);
+                    // 如果失败，用户可通过点击喇叭手动播放
+                });
+            }
+        }
+
+        // 点击封面蛋糕 → 隐藏封面，播放音乐
+        cover.addEventListener('click', function() {
+            cover.classList.add('hidden');
+            playMusic();
+        });
+
+        // 点击封面图片也触发（防止图片阻止事件）
+        coverCake.addEventListener('click', function(e) {
+            e.stopPropagation(); // 但父元素也会触发，所以没问题
+        });
+
+        // 手动控制音乐（喇叭按钮）
         function toggleMusic() {
             if (isMusicPlaying) {
                 audio.pause();
                 isMusicPlaying = false;
                 icon.textContent = '🔇';
             } else {
-                // 用户手势触发播放
                 audio.play().then(() => {
                     isMusicPlaying = true;
                     icon.textContent = '🔊';
                 }).catch((err) => {
-                    // 如果播放失败（比如文件不存在），提示用户
-                    alert('播放失败，请确保 ' + MUSIC_FILE + ' 文件已上传到同目录。');
-                    console.warn('音频播放错误:', err);
+                    alert('播放失败，请检查 ' + MUSIC_FILE + ' 文件是否存在。');
+                    console.warn('播放错误:', err);
                 });
             }
         }
-
         toggleBtn.addEventListener('click', toggleMusic);
 
-        // 用户首次点击页面任意位置时自动播放（一次）
-        function autoStartMusic() {
-            if (!isMusicPlaying) {
-                audio.play().then(() => {
-                    isMusicPlaying = true;
-                    icon.textContent = '🔊';
-                }).catch(() => {});
-            }
-            document.removeEventListener('click', autoStartMusic);
-            document.removeEventListener('touchstart', autoStartMusic);
-        }
-        document.addEventListener('click', autoStartMusic);
-        document.addEventListener('touchstart', autoStartMusic);
+        // 如果用户已经手动关闭了封面，但音乐还没播放（极少情况），可以保留喇叭按钮手动。
 
         console.log(`🎂 祝 ${CONFIG.friendName} ${CONFIG.age}岁生日快乐！`);
         console.log(`💪 到了20岁了就要拿出真本事！`);
-        console.log(`🎵 正在尝试播放《不凡》... 如果听不到，请检查 ${MUSIC_FILE} 是否存在。`);
+        console.log(`🎵 点击封面蛋糕进入主页面，音乐《不凡》自动响起。`);
     </script>
 </body>
 </html>
