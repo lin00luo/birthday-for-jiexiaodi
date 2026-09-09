@@ -21,7 +21,7 @@
             touch-action: manipulation;
         }
 
-        /* ===== 封面页（纯黑 + 蛋糕） ===== */
+        /* ===== 封面页 ===== */
         #cover {
             position: fixed;
             top: 0;
@@ -113,13 +113,13 @@
             z-index: 1;
         }
 
-        /* ===== 主内容（无蛋糕） ===== */
+        /* ===== 主内容 ===== */
         .content {
             position: relative;
             z-index: 10;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;  /* 顶部对齐 */
+            justify-content: flex-start;
             align-items: center;
             width: 100%;
             height: 100vh;
@@ -198,14 +198,14 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== 底部区域（无蛋糕，只有按钮和提示） ===== */
+        /* ===== 底部区域 ===== */
         .bottom-section {
-            margin-top: auto;          /* 自动推到底部 */
+            margin-top: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            padding-bottom: 20px;      /* 底部留白 */
+            padding-bottom: 20px;
         }
 
         .btn-group {
@@ -252,6 +252,20 @@
             padding: 4px 18px;
             border-radius: 20px;
             font-weight: 300;
+        }
+
+        /* ===== 新增：视频加载提示 ===== */
+        .video-hint {
+            color: rgba(255, 215, 0, 0.6);
+            font-size: 0.65rem;
+            margin-top: 6px;
+            z-index: 10;
+            letter-spacing: 1px;
+            background: rgba(0,0,0,0.3);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-weight: 300;
+            border: 1px solid rgba(255,215,0,0.1);
         }
 
         /* ===== 弹窗（祝福） ===== */
@@ -433,6 +447,10 @@
                 padding: 10px 20px;
                 font-size: 0.8rem;
             }
+            .video-hint {
+                font-size: 0.55rem;
+                padding: 3px 12px;
+            }
         }
     </style>
 </head>
@@ -464,7 +482,7 @@
     <div class="video-modal" id="videoModal">
         <div class="video-container">
             <button class="close-video" id="closeVideoBtn">✕</button>
-            <video id="videoPlayer" controls playsinline>
+            <video id="videoPlayer" controls playsinline preload="metadata">
                 <source src="" type="video/mp4">
                 您的浏览器不支持视频播放。
             </video>
@@ -472,10 +490,10 @@
         </div>
     </div>
 
-    <!-- ===== 主内容（无蛋糕） ===== -->
+    <!-- ===== 主内容 ===== -->
     <div class="content" id="mainContent">
 
-        <!-- 上半部分：标题、副标题、祝福语 -->
+        <!-- 上半部分 -->
         <div class="top-section">
             <div class="title">🎂 HAPPY BIRTHDAY</div>
             <div class="sub-title" id="subTitle"></div>
@@ -484,13 +502,15 @@
             </div>
         </div>
 
-        <!-- 下半部分：只有按钮和提示（贴底） -->
+        <!-- 下半部分 -->
         <div class="bottom-section">
             <div class="btn-group">
                 <button class="btn-boom" id="boomBtn">🎈 戳我许愿</button>
                 <button class="btn-video" id="videoBtn">🎬 视频彩蛋</button>
             </div>
             <div class="hint">👆 点击蛋糕进入 · 点击许愿</div>
+            <!-- ===== 新增的视频加载提示 ===== -->
+            <div class="video-hint">📌 如果视频加载缓慢，就多点几下屏幕</div>
         </div>
 
     </div>
