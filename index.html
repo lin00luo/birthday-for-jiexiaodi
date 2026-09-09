@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎂 宋文杰 · 20岁生日快乐</title>
     <style>
+        /* ===== 样式与上一版完全一致，无改动 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -21,7 +22,6 @@
             touch-action: manipulation;
         }
 
-        /* ===== 封面页 ===== */
         #cover {
             position: fixed;
             top: 0;
@@ -51,7 +51,6 @@
             transform: scale(0.92);
         }
 
-        /* ===== 背景轮播 ===== */
         #bg-slider {
             position: fixed;
             top: 0;
@@ -78,7 +77,6 @@
             opacity: 1;
         }
 
-        /* ===== 星星 ===== */
         .stars {
             position: fixed;
             top: 0;
@@ -102,7 +100,6 @@
             100% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* ===== Canvas 粒子 ===== */
         #particleCanvas {
             position: fixed;
             top: 0;
@@ -113,7 +110,6 @@
             z-index: 1;
         }
 
-        /* ===== 主内容 ===== */
         .content {
             position: relative;
             z-index: 10;
@@ -198,7 +194,6 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== 底部区域 ===== */
         .bottom-section {
             margin-top: auto;
             display: flex;
@@ -254,7 +249,6 @@
             font-weight: 300;
         }
 
-        /* ===== 新增：视频加载提示 ===== */
         .video-hint {
             color: rgba(255, 215, 0, 0.6);
             font-size: 0.65rem;
@@ -268,7 +262,6 @@
             border: 1px solid rgba(255,215,0,0.1);
         }
 
-        /* ===== 弹窗（祝福） ===== */
         .toast {
             position: fixed;
             top: 50%;
@@ -333,7 +326,6 @@
             transform: scale(0.92);
         }
 
-        /* ===== 视频模态框 ===== */
         .video-modal {
             position: fixed;
             top: 0;
@@ -411,7 +403,6 @@
             background: rgba(255,255,255,0.2);
         }
 
-        /* ===== 音频控制 ===== */
         .audio-toggle {
             position: fixed;
             bottom: 20px;
@@ -438,39 +429,26 @@
         }
         .audio-toggle .icon { line-height: 1; }
 
-        /* ===== 响应式 ===== */
         @media (max-width: 400px) {
-            .btn-group {
-                gap: 8px;
-            }
-            .btn-boom, .btn-video {
-                padding: 10px 20px;
-                font-size: 0.8rem;
-            }
-            .video-hint {
-                font-size: 0.55rem;
-                padding: 3px 12px;
-            }
+            .btn-group { gap: 8px; }
+            .btn-boom, .btn-video { padding: 10px 20px; font-size: 0.8rem; }
+            .video-hint { font-size: 0.55rem; padding: 3px 12px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== 封面页 ===== -->
+    <!-- ===== 封面 ===== -->
     <div id="cover">
         <img src="minecraft_cake.png" alt="Minecraft Cake" id="coverCake">
     </div>
 
-    <!-- ===== 背景轮播 ===== -->
+    <!-- ===== 背景 ===== -->
     <div id="bg-slider"></div>
-
-    <!-- ===== 星星 ===== -->
     <div class="stars" id="stars"></div>
-
-    <!-- ===== 粒子 Canvas ===== -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- ===== 祝福弹窗 ===== -->
+    <!-- ===== 弹窗 ===== -->
     <div class="toast" id="toast">
         <span class="emoji-big">🎉</span>
         <div class="msg">生日快乐！</div>
@@ -491,9 +469,7 @@
     </div>
 
     <!-- ===== 主内容 ===== -->
-    <div class="content" id="mainContent">
-
-        <!-- 上半部分 -->
+    <div class="content">
         <div class="top-section">
             <div class="title">🎂 HAPPY BIRTHDAY</div>
             <div class="sub-title" id="subTitle"></div>
@@ -501,18 +477,14 @@
                 <span>✨ 愿道友大道可期，道心永固 ✨</span>
             </div>
         </div>
-
-        <!-- 下半部分 -->
         <div class="bottom-section">
             <div class="btn-group">
                 <button class="btn-boom" id="boomBtn">🎈 戳我许愿</button>
                 <button class="btn-video" id="videoBtn">🎬 视频彩蛋</button>
             </div>
             <div class="hint">👆 点击蛋糕进入 · 点击许愿</div>
-            <!-- ===== 新增的视频加载提示 ===== -->
             <div class="video-hint">📌 如果视频加载缓慢，就多点几下屏幕</div>
         </div>
-
     </div>
 
     <!-- ===== 音频控制 ===== -->
@@ -536,14 +508,14 @@
         const MUSIC_FILE = 'bufan.mp3';
         const CAKE_IMAGE = 'minecraft_cake.png';
 
-        // ★★★ 视频配置 ★★★
+        // 视频列表
         const VIDEOS = [
             { name: '🎞️ 回忆片段1', src: 'video1.mp4' },
             { name: '🎞️ 回忆片段2', src: 'video2.mp4' },
         ];
 
         // ================================================================
-        //  以下代码自动运行，一般不需要修改
+        //  以下代码自动运行
         // ================================================================
 
         // ---- 背景轮播 ----
@@ -784,6 +756,7 @@
         audio.volume = 0.8;
 
         let isMusicPlaying = false;
+        let musicPausedByVideo = false;   // 标记音乐是否因视频播放而被暂停
         const toggleBtn = document.getElementById('audioToggle');
         const icon = toggleBtn.querySelector('.icon');
 
@@ -803,13 +776,24 @@
 
         function toggleMusic() {
             if (isMusicPlaying) {
+                // 用户手动关闭音乐
                 audio.pause();
                 isMusicPlaying = false;
                 icon.textContent = '🔇';
+                // 清除视频暂停音乐的标志，因为用户主动关闭了
+                musicPausedByVideo = false;
             } else {
+                // 用户手动开启音乐
                 audio.play().then(() => {
                     isMusicPlaying = true;
                     icon.textContent = '🔊';
+                    // 如果视频正在播放，音乐不应该播放，所以再次暂停并标记
+                    if (!videoPlayer.paused && videoPlayer.currentTime > 0) {
+                        audio.pause();
+                        musicPausedByVideo = true;
+                    } else {
+                        musicPausedByVideo = false;
+                    }
                 }).catch((err) => {
                     alert('播放失败，请检查 ' + MUSIC_FILE + ' 文件是否存在。');
                 });
@@ -824,6 +808,58 @@
         const closeVideoBtn = document.getElementById('closeVideoBtn');
         const videoBtn = document.getElementById('videoBtn');
 
+        // ===== 视频与音乐联动逻辑 =====
+        videoPlayer.addEventListener('play', function() {
+            // 如果音乐正在播放，则暂停音乐并标记
+            if (isMusicPlaying && !audio.paused) {
+                audio.pause();
+                musicPausedByVideo = true;
+            }
+        });
+
+        videoPlayer.addEventListener('pause', function() {
+            // 如果音乐是因为视频而暂停的，则恢复
+            if (musicPausedByVideo) {
+                // 但只有用户没有手动关闭音乐时才恢复（isMusicPlaying 为 true 表示用户希望音乐播放）
+                // 注意：如果用户手动关闭了音乐（isMusicPlaying 为 false），此时即使 video paused 也不应恢复
+                if (isMusicPlaying) {
+                    audio.play().catch(() => {});
+                }
+                musicPausedByVideo = false;
+            }
+        });
+
+        videoPlayer.addEventListener('ended', function() {
+            // 视频播放结束，恢复音乐（与暂停逻辑相同）
+            if (musicPausedByVideo) {
+                if (isMusicPlaying) {
+                    audio.play().catch(() => {});
+                }
+                musicPausedByVideo = false;
+            }
+        });
+
+        // 关闭视频模态框时，如果音乐被视频暂停，则恢复
+        function closeVideoModal() {
+            videoModal.classList.remove('show');
+            videoPlayer.pause();
+            // 如果有 iframe，清理
+            if (videoPlayer._iframe) {
+                videoPlayer._iframe.remove();
+                delete videoPlayer._iframe;
+                videoPlayer.style.display = 'block';
+                videoPlayer.src = '';
+            }
+            // 如果音乐被视频暂停，恢复音乐
+            if (musicPausedByVideo) {
+                if (isMusicPlaying) {
+                    audio.play().catch(() => {});
+                }
+                musicPausedByVideo = false;
+            }
+        }
+
+        // ---- 视频切换与加载 ----
         function renderVideoButtons() {
             videoControls.innerHTML = '';
             VIDEOS.forEach((video, index) => {
@@ -843,62 +879,27 @@
         function loadVideo(index) {
             const video = VIDEOS[index];
             const src = video.src;
-            if (src.startsWith('http://') || src.startsWith('https://')) {
-                if (src.includes('bilibili.com')) {
-                    const container = videoPlayer.parentNode;
-                    const iframe = document.createElement('iframe');
-                    iframe.src = src;
-                    iframe.width = '100%';
-                    iframe.height = 'auto';
-                    iframe.style.aspectRatio = '16/9';
-                    iframe.style.border = 'none';
-                    iframe.allowFullscreen = true;
-                    iframe.setAttribute('allowfullscreen', '');
-                    videoPlayer.style.display = 'none';
-                    container.insertBefore(iframe, videoPlayer);
-                    if (videoPlayer._iframe) {
-                        videoPlayer._iframe.remove();
-                    }
-                    videoPlayer._iframe = iframe;
-                    return;
-                } else {
-                    videoPlayer.style.display = 'block';
-                    if (videoPlayer._iframe) {
-                        videoPlayer._iframe.remove();
-                        delete videoPlayer._iframe;
-                    }
-                    videoPlayer.src = src;
-                    videoPlayer.load();
-                }
-            } else {
+            // 清除之前的 iframe（如果有）
+            if (videoPlayer._iframe) {
+                videoPlayer._iframe.remove();
+                delete videoPlayer._iframe;
                 videoPlayer.style.display = 'block';
-                if (videoPlayer._iframe) {
-                    videoPlayer._iframe.remove();
-                    delete videoPlayer._iframe;
-                }
-                videoPlayer.src = src;
-                videoPlayer.load();
             }
+            videoPlayer.src = src;
+            videoPlayer.load();
+            // 切换后自动播放
+            videoPlayer.play().catch(() => {});
         }
 
         videoBtn.addEventListener('click', function() {
             videoModal.classList.add('show');
             renderVideoButtons();
+            // 如果视频源已加载，自动播放
             if (videoPlayer.src) {
                 videoPlayer.play().catch(() => {});
             }
         });
 
-        function closeVideoModal() {
-            videoModal.classList.remove('show');
-            videoPlayer.pause();
-            if (videoPlayer._iframe) {
-                videoPlayer._iframe.remove();
-                delete videoPlayer._iframe;
-                videoPlayer.style.display = 'block';
-                videoPlayer.src = '';
-            }
-        }
         closeVideoBtn.addEventListener('click', closeVideoModal);
         videoModal.addEventListener('click', function(e) {
             if (e.target === this) closeVideoModal();
@@ -906,7 +907,7 @@
 
         console.log(`🎂 祝 ${CONFIG.friendName} ${CONFIG.age}岁生日快乐！`);
         console.log(`🎵 点击封面蛋糕进入主页面，音乐《不凡》自动响起。`);
-        console.log(`🎬 点击“视频彩蛋”观看回忆视频！`);
+        console.log(`🎬 点击“视频彩蛋”观看回忆视频，播放时音乐自动暂停。`);
     </script>
 </body>
 </html>
